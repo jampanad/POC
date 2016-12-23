@@ -12,28 +12,27 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.context.annotation.Configuration;
+
 @Configuration
 public class CORSResponseFilter implements Filter {
 
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {}
+	@Override
+	public void init(FilterConfig filterConfig) throws ServletException {
+	}
 
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
-    HttpServletRequest request = (HttpServletRequest) servletRequest;
+	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
+			throws IOException, ServletException {
+		HttpServletRequest request = (HttpServletRequest) servletRequest;
 
-    HttpServletResponse resp = (HttpServletResponse) servletResponse;
-    resp.addHeader("Access-Control-Allow-Origin","*");
-    resp.addHeader("Access-Control-Allow-Methods","GET,POST,DELETE,PUT");
-    resp.addHeader("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept");
+		HttpServletResponse resp = (HttpServletResponse) servletResponse;
+		resp.addHeader("Access-Control-Allow-Origin", "*");
+		resp.addHeader("Access-Control-Allow-Methods", "GET,POST,DELETE,PUT,OPTIONS");
+		resp.addHeader("Access-Control-Max-Age", "3600");
+		resp.addHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept,Access-Control-Allow-Origin,Authorization");
+		chain.doFilter(request, servletResponse);
+	}
 
-    // Just ACCEPT and REPLY OK if OPTIONS
-    if ( request.getMethod().equals("OPTIONS") ) {
-        resp.setStatus(HttpServletResponse.SC_OK);
-        return;
-    }
-    chain.doFilter(request, servletResponse);
-}
-
- @Override
-public void destroy() {}
+	@Override
+	public void destroy() {
+	}
 }
