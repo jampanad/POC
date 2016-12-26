@@ -13,19 +13,23 @@
 <!-- Latest compiled JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
- <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+ <script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
  
 <script type="text/javascript">
             var app = angular.module("Student", []);
          
             //Controller Part
-            app.controller("StudentController", function($scope, $http,$window) {
+            app.controller("StudentController", function($scope, $http,$window ) {
             
+            	var credentials = $window.btoa('greg' + ':' + 'turnquist');
+  				var authorization = {'Authorization': "Basic " + credentials};
+  				 
+  				var header = { headers: authorization }
             $scope.action = "create";
             $scope.updateUrl = {};
             //update the student
             $scope.update = function (studentUrl){
-		        $http.get(studentUrl).success(function(data) {
+		        $http.get(studentUrl,header).success(function(data) {
 		        		$scope.form={};
             			$scope.form.name=data.name;
             			$scope.form.section=data.section;
@@ -38,34 +42,45 @@
             
             //Deleting students
            $scope.delete = function (studentUrl){
-		        $http.delete(studentUrl).success(function(data) {
-						$window.location.href = '/'
+		        $http.delete(studentUrl,header).success(function(data) {
+						$window.location.href = '/admin'
 					});
 		    }
-                    var url = angular.element(document.getElementsByName('serviceUrlHome')[0]).val();
+               var url = angular.element(document.getElementsByName('serviceUrlHome')[0]).val();
                console.log("url value is "+url);
+               
                //Loading all the students
             	$scope.refresh = function (){
             	//alert(0);
-            	$http.get(url).success(function(data) {
-						$scope.students = data._embedded.students;
-				});
+  				//$http.defaults.headers.common['Authorization'] = 'Basic ' + Base64.encode('ollie' + ':' + 'gierke');
+  				//$http.defaults.headers.common['Authorization'] = 'Basic Z3JlZzp0dXJucXVpc3Q=';
+            	
+  				console.log(":::::: Resource details::::::::",url);
+  				console.log("credentials value is:::::::: "+credentials);
+  				
+  				$http.get(url,header).success(function(response) {
+  					$scope.students = response._embedded.students;
+  					console.log(":::::: Success data22: ", response.data);
+  				});
+  				
+  				
+  				
 				}
 				
 				//Adding a student
                 $scope.submitStudent = function() {
                 
                 	if($scope.action == 'create') {
-                     $http.post(url,angular.toJson($scope.form)).
+                     $http.post(url,angular.toJson($scope.form),header).
                      then(function(response){
                      console.log(response);
-					 $window.location.href = '/'
+					 $window.location.href = '/admin'
                      });
                      }
                      else {
-                     	$http.put($scope.updateUrl,angular.toJson($scope.form)).
+                     	$http.put($scope.updateUrl,angular.toJson($scope.form),header).
                      then(function(response){
-					 $window.location.href = '/'
+					 $window.location.href = '/admin'
                      });
                      }
                    
@@ -78,6 +93,7 @@
 <body ng-app="Student" ng-controller="StudentController" data-ng-init="refresh()">
 
 	 <input type="hidden" name="serviceUrlHome" value="${serviceMessage}" >
+	 <br>
 	<form class="form-horizontal" ng-submit="submitStudent()">
 	  <div class="form-group" >
 	    <label class="control-label col-sm-2">Name:</label>
@@ -105,7 +121,7 @@
 	  </div>
 	  <div class="form-group">
 	    <div class="col-sm-5"> 
-	      <input type="submit" class="form-control" value="Submit" />
+	      <input type="submit" class="form-control btn btn-primary" value="Submit" />
 	    </div>
 	  </div>
 	  </form>
@@ -133,6 +149,8 @@
     </tr>
   </tbody>
 </table>
+
+	<a href="/logout">logout</a>
 	  
 </body>	
 </div>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-    <wb-module deploy-name="SpringMVC">
+    <wb-module deploy-name="SpringGradle">
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
-        <property name="context-root" value="SpringMVC"/>
-        <property name="java-output-path" value="/SpringMVC/bin"/>
+        <property name="java-output-path" value="/SpringGradle/bin"/>
+        <property name="context-root" value="SpringGradle"/>
     </wb-module>
 </project-modules>
