@@ -31,13 +31,13 @@ import com.nisum.test.dto.ServiceMessages;
 @SpringBootApplication
 @EnableAutoConfiguration
 @ComponentScan(basePackages = { "com.nisum.test.*" })
-public class HomeController {
+public class HomeController2 {
 
 	@Autowired
 	private ServiceMessages serviceMessage;
 
 	@Autowired
-	private TokenStore myTokenStore;
+	private TokenStore tokenStore;
 
 	@Bean
 	public TokenStore tokenStore() {

@@ -22,17 +22,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 /*.loginPage("/login")
                 .permitAll()*/
                 .and()
-            .logout().logoutUrl("/logout")
-            .deleteCookies("JSESSIONID")
+            .logout().logoutUrl("/logout").logoutSuccessUrl("/")
                 .permitAll();
-       // http.csrf().disable();
+        http.csrf().disable();
     }
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-            .inMemoryAuthentication()
-                .withUser("user").password("password").roles("USER");
-    }
 }
 

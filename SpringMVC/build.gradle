@@ -34,8 +34,15 @@ dependencies {
 	//compile 'org.springframework:spring-webmvc:4.1.6.RELEASE'
 	compile 'javax.servlet:jstl:1.2'
 		
-		//compile "javax.servlet:javax.servlet-api:3.1.0"
-		//compile "javax.servlet.jsp:jsp-api:2.2"
+		compile "javax.servlet:javax.servlet-api:3.1.0"
+		compile "javax.servlet.jsp:jsp-api:2.2"
+		
+		compile "org.apache.tiles:tiles-jsp:3.0.3"
+	compile "org.apache.tiles:tiles-core:3.0.3"
+	compile "org.apache.tiles:tiles-api:3.0.3"
+	compile "org.apache.tiles:tiles-servlet:3.0.3"
+	compile "org.apache.tiles:tiles-template:3.0.3"
+	
 	compile("org.springframework.boot:spring-boot-starter-web")
    
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.21'
@@ -52,7 +59,10 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-actuator")
 	
 	testCompile 'org.springframework.security:spring-security-test'
-	testCompile 'junit:junit:4.12'
+	testCompile 'junit:junit:4.8.2'
+    
+	compile "org.mockito:mockito-all:1.10.19"
+    compile "org.powermock:powermock-mockito-release-full:1.6.4"
 	providedRuntime 'org.apache.tomcat.embed:tomcat-embed-jasper'
 }
 

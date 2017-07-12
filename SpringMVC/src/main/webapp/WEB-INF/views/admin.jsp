@@ -5,88 +5,18 @@
 <html>
 <head>
 <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/bootstrap.min.css">
 
 <!-- jQuery library -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="/js/jquery-3.1.1.min.js"></script>
 
 <!-- Latest compiled JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
 
- <script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+ <script src = "/js/angular.min.js"></script>
  
-<script type="text/javascript">
-            var app = angular.module("Student", []);
-         
-            //Controller Part
-            app.controller("StudentController", function($scope, $http,$window ) {
-            
-            	var credentials = $window.btoa('greg' + ':' + 'turnquist');
-  				var authorization = {'Authorization': "Basic " + credentials};
-  				 
-  				var header = { headers: authorization }
-            $scope.action = "create";
-            $scope.updateUrl = {};
-            //update the student
-            $scope.update = function (studentUrl){
-		        $http.get(studentUrl,header).success(function(data) {
-		        		$scope.form={};
-            			$scope.form.name=data.name;
-            			$scope.form.section=data.section;
-            			$scope.form.age=data.age;
-						$scope.form.address=data.address;
-						$scope.action = "update";
-						$scope.updateUrl = studentUrl;
-					});
-		    }
-            
-            //Deleting students
-           $scope.delete = function (studentUrl){
-		        $http.delete(studentUrl,header).success(function(data) {
-						$window.location.href = '/admin'
-					});
-		    }
-               var url = angular.element(document.getElementsByName('serviceUrlHome')[0]).val();
-               console.log("url value is "+url);
-               
-               //Loading all the students
-            	$scope.refresh = function (){
-            	//alert(0);
-  				//$http.defaults.headers.common['Authorization'] = 'Basic ' + Base64.encode('ollie' + ':' + 'gierke');
-  				//$http.defaults.headers.common['Authorization'] = 'Basic Z3JlZzp0dXJucXVpc3Q=';
-            	
-  				console.log(":::::: Resource details::::::::",url);
-  				console.log("credentials value is:::::::: "+credentials);
-  				
-  				$http.get(url,header).success(function(response) {
-  					$scope.students = response._embedded.students;
-  					console.log(":::::: Success data22: ", response.data);
-  				});
-  				
-  				
-  				
-				}
-				
-				//Adding a student
-                $scope.submitStudent = function() {
-                
-                	if($scope.action == 'create') {
-                     $http.post(url,angular.toJson($scope.form),header).
-                     then(function(response){
-                     console.log(response);
-					 $window.location.href = '/admin'
-                     });
-                     }
-                     else {
-                     	$http.put($scope.updateUrl,angular.toJson($scope.form),header).
-                     then(function(response){
-					 $window.location.href = '/admin'
-                     });
-                     }
-                   
-                };
-                });
- </script>
+<script src = "/js/controllers/student.js"> </script>
+ <link rel="icon" href="favicon.png" type="image/png"/>
  </head>
  
 <div class="col-md-6 col-md-offset-3">
@@ -94,29 +24,34 @@
 
 	 <input type="hidden" name="serviceUrlHome" value="${serviceMessage}" >
 	 <br>
-	<form class="form-horizontal" ng-submit="submitStudent()">
+	<form class="form-horizontal" name="myForm" novalidate ng-submit="myForm.$valid && submitStudent()">
 	  <div class="form-group" >
 	    <label class="control-label col-sm-2">Name:</label>
 	    <div class="col-sm-5">
-	      <input type="text" class="form-control" ng-model="form.name" placeholder="Enter name">
+	      <input type="text" name="name" class="form-control" ng-model="form.name" placeholder="Enter name" required>
+	      <span style="color:red" ng-show="myForm.name.$invalid && myForm.$touched">Name is required.</span>
 	    </div>
 	  </div>
 	  <div class="form-group" >
 	    <label class="control-label col-sm-2">Section:</label>
 	    <div class="col-sm-5">
-	      <input type="text" class="form-control" ng-model="form.section" placeholder="Enter section">
+	      <input type="text" name="section" class="form-control" ng-model="form.section" placeholder="Enter section" required>
+	      <span style="color:red" ng-show="myForm.section.$invalid && myForm.$touched">Section is required.</span>
 	    </div>
 	  </div>
 	  <div class="form-group" >
 	    <label class="control-label col-sm-2">Age:</label>
 	    <div class="col-sm-5">
-	      <input type="text" class="form-control" ng-model="form.age" placeholder="Enter age">
+	      <input type="number"  class="form-control" name="age" ng-model="form.age" ng-pattern="/^[0-9]{2}$/" placeholder="Enter age" required>
+	      <span style="color:red" ng-show="myForm.age.$invalid && myForm.$touched">Age is required.</span>
+	      <span style="color:red" ng-show="myForm.age.$error.pattern && (myForm.$submitted || !myForm.$pristine)">Invalid Input</span>
 	    </div>
 	  </div>
 	  <div class="form-group">
 	    <label class="control-label col-sm-2" for="pwd">Address:</label>
 	    <div class="col-sm-5"> 
-	      <input type="text" class="form-control"  ng-model="form.address" placeholder="Enter address">
+	      <input type="textarea" name="address" class="form-control"  ng-model="form.address" placeholder="Enter address" required>
+	      <span style="color:red" ng-show="myForm.address.$invalid && myForm.$touched">Address is required.</span>
 	    </div>
 	  </div>
 	  <div class="form-group">
@@ -144,7 +79,7 @@
     <td>{{i.section}}</td>
     <td>{{i.age}}</td>
     <td>{{i.address}}</td>
-    <td><input type="button" ng-click="delete(i._links.self.href)" class="btn btn-primary" value="Delete" />
+    <td><input type="button" ng-click="delete(i._links.self.href,$index)" class="btn btn-primary" value="Delete" />
     	<input type="button" ng-click="update(i._links.self.href)" class="btn btn-primary" value="Update" /></td>
     </tr>
   </tbody>
